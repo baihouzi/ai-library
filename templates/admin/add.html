@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+{% block bodyhead %}{% endblock %}
+{% block nav %}
+<ul class="nav navbar-nav">
+  <li>
+    <a href="{{ url_for('index') }}">主页</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_book') }}">图书管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_user') }}">用户管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('query_book') }}">查询图书</a>
+  </li>
+  <li>
+    <a href="{{ url_for('record') }}">借书记录</a>
+  </li>
+</ul>
+
+{% endblock %}
+{% block content %}
+
+<div class="container" style="padding:150px 0px">
+  <div class="login"
+    style="width:300px;height:300px;margin:0 auto;padding: 1px 40px;background-color: rgba(255, 255, 255, 0.55);border-radius:20px;display: none;">
+
+    <h2 class="text-center">添加管理员</h2>
+    <form id="form" style="margin-top:20px;" method="post">
+      <div class="form-group">
+        <div class="input-group" style="width:100%">
+          <input type="text" class="form-control" name="admin_id" id="admin_id" placeholder="请输入学工号">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="input-group" style="width:100%">
+          <input type="text" class="form-control" name="admin_name" id="admin_name" placeholder="请输入姓名">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="input-group" style="width:100%">
+          <input type="password" class="form-control" name="admin_pwd" id="admin_pwd" placeholder="请输入密码">
+        </div>
+      </div>
+
+      <button type="submit" class="form-control btn btn-primary" id="submit">添加</button>
+    </form>
+  </div>
+</div>
+<script>
+
+
+
+
+  $(function () {
+
+
+    $(".login").fadeIn(800);
+
+    $("#submit").click(function () {
+      if ($("[name='admin_id']").val().length == 0 || $("[name='admin_name']").val().length == 0 || $("[name='admin_pwd']").val().length == 0) {
+        alert("请填写完整信息");
+        return false;
+      }
+    });
+  });
+</script>
+
+{% endblock %}

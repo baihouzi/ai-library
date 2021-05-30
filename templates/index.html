@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block head %}{% endblock %}
+
+{% block bodyhead %}{% endblock %}
+{% block nav %}
+<ul class="nav navbar-nav">
+  <li class="active">
+    <a href="{{ url_for('index') }}">主页</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_book') }}">图书管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_user') }}">用户管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('query_book') }}">查询图书</a>
+  </li>
+  <li>
+    <a href="{{ url_for('record') }}">借书记录</a>
+  </li>
+</ul>
+{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="center-block"
+    style="margin-top:50px;padding:20px;width:500px;background-color:rgba(255, 255, 255, 0.55);border-radius:30px;">
+    <h3 class="text-center">{{ session.get('username')}}管理员，你好！</h3>
+    <h3 class="text-center" style="margin-top:70px;">当前共有{{book_num}}本图书</h3>
+    <h3 class="text-center">当前共有{{user_num}}位读者</h3>
+    <h3 class="text-center">有{{borrow_num}}条借书记录</h3>
+    <h4 class="text-center" style="margin-top:70px;">上次登录时间：</h4>
+    <h4 class="text-center">{{session.get('last_login_time')}}</h4>
+  </div>
+</div>
+
+{% endblock %}

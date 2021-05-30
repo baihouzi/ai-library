@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+{% block nav %}
+<ul class="nav navbar-nav">
+  <li>
+    <a href="{{ url_for('index') }}">主页</a>
+  </li>
+  <li class="active">
+    <a href="{{ url_for('list_book') }}">图书管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_user') }}">用户管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('query_book') }}">查询图书</a>
+  </li>
+  <li>
+    <a href="{{ url_for('record') }}">借书记录</a>
+  </li>
+</ul>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="h3 text-center">
+  <b>{% if book['borrower'] == -1 %}
+    出借《{{ book['title'] }}》
+    {% else %}
+    {{ borrower['name'] }}归还《{{ book['title'] }}》
+    {% endif %}</b>
+</div>
+
+<form method="post" action="compare/{{ book['id'] }}" style="margin: 20px auto 20px;"
+  class="form-horizontal text-center">
+  <div class="form-group">
+    <div>人脸记录（请调整脸部姿态，眼睛直视摄像头）</div>
+    <img src="{{ url_for('static', filename='snap.png') }}" class="img-thumbnail img-responsive">
+    
+    <div>{% if status == "1" %}成功验证身份{% else %}未成功验证身份{% endif %}</div>
+    <button type="submit" class="btn btn-primary">拍&nbsp;摄</button>
+  </div>
+</form>
+<form method="post" id="form" class="form-horizontal text-center container-fluid"  style="width:200px;margin: 0px auto 0px;" >
+  <input name="book_id" id="book_id" value="{{ book_id }}" hidden>
+  {% if  borrow_status == '-1' %}
+  <div class="form-group" >
+    <div class="input-group">
+      <div class="input-group-addon">借书时长：</div>
+      <input type="text" class="form-control" name="lend_time" id="lend_time">
+      <div class="input-group-addon">天</div>
+    </div>
+  </div>
+  <span class="help-block">（最多借90天）</span>
+  {% endif %}
+  <div class="form-group" >
+    <div class="input-group">   
+      <div class="input-group-addon">用户名：</div>
+      <input name="borrower" id="borrower" class="form-control" readonly="readonly" type="text"
+        value="{{ borrower['name'] }}">
+    </div>
+  </div>
+  {% if status == "1" %}
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-primary" id="submit" >提&nbsp;交</button>
+      </span>
+      {% endif %}
+</form>
+
+<script>
+
+  $(function () {
+
+    //注册回车查找
+    $("#lend_time").keydown(function (event) {
+      if (event.keyCode == 13) {
+        $("#submit").click();
+      }
+    });
+
+    $("#submit").click(function () {
+      {% if borrow_status == '-1' %}
+      if ($("[name='lend_time']").val().length == 0) {
+        alert("请输入借书时长！");
+        return false;
+      } else
+        if ($("[name='lend_time']").val() * 1 > 90) {
+          alert("最多只能借90天！");
+          return false;
+        } else
+        {% endif %}
+          $.post({
+            url: "{{ url_for('op_book') }}",
+            data: $("#form").serialize(),
+            success: function (data) {
+              alert(data.message);
+              if (data.code == 200) {
+                location.href = "{{ url_for('list_book') }}";  
+              } else {
+                return false;
+              }
+
+            }
+
+
+          });
+    });
+
+
+
+  });
+
+
+</script>
+
+{% endblock %}
+

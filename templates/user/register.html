@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block head %}{% endblock %}
+{% block nav %}
+<ul class="nav navbar-nav">
+  <li>
+    <a href="{{ url_for('index') }}">主页</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_book') }}">图书管理</a>
+  </li>
+  <li class="active">
+    <a href="{{ url_for('list_user') }}">用户管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('query_book') }}">查询图书</a>
+  </li>
+  <li>
+    <a href="{{ url_for('record') }}">借书记录</a>
+  </li>
+</ul>
+
+{% endblock %}
+{% block content %}
+
+<div class="h3 text-center">
+  <b>添加用户</b>
+</div>
+
+<form method="post" action="snapshot" class="form-horizontal text-center" style="width:500px;margin: 20px auto 20px;">
+  <div class="form-group">
+    <div>人脸记录（请调整脸部姿态，眼睛直视摄像头）</div>
+    <img src="{{ url_for('static', filename='snap.png') }}" class="img-thumbnail img-responsive">
+    <div>{% if status == 1 %}成功获取人脸{% else %}获取人脸失败，不能注册{% endif %}</div>
+    <button type="submit" class="btn btn-primary">拍&nbsp;摄</button>
+  </div>
+</form>
+<form method="post" class="form-horizontal text-center" style="width:500px;margin: 20px auto 20px;">
+  <div class="form-group">
+    <div class="input-group">
+      <div class="input-group-addon">姓名:</div>
+      <input type="text" class="form-control" name="username" id="username">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="input-group">
+      <div class="input-group-addon">学号:</div>
+      <input type="text" class="form-control" name="student_num" id="student_num">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="input-group">
+      <div class="input-group-addon">学院:</div>
+      <input type="text" class="form-control" name="college" id="college">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="input-group">
+      <div class="input-group-addon">班级:</div>
+      <input type="text" class="form-control" name="class" id="class">
+    </div>
+  </div> {% if status == 1 %}
+  <div class="input-group text-center">
+    <button type="submit" class="btn btn-primary" id="submit">提&nbsp;交</button>
+    {% endif %}
+  </div>
+
+</form>
+<script>
+
+
+
+
+  $(function () {
+
+
+    $("#submit").click(function () {
+      if ($("[name='username']").val().length == 0 || $("[name='student_num']").val().length == 0 || $("[name='college']").val().length == 0 || $("[name='class']").val().length == 0) {
+        alert("请填写完整信息！");
+        return false;
+      } else
+        var $val = $("[name='student_num']").val();
+      var code;
+      for (var i = 0; i < $val.length; i++) {
+        var code = $val.charAt(i).charCodeAt(0);
+        if (code < 48 || code > 57) {
+          $("[name='student_num']").focus();
+          $("[name='student_num']").val("");
+          alert("请输入正确的学号!");
+          return false;
+        } else
+          return true;
+      }
+
+
+    });
+  });
+</script>
+{% endblock %}

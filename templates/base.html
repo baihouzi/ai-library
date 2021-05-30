@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN" style="height: 100%;">
+
+<head>{% block head %}{% endblock %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{% block title %}{% endblock %} - 新疆工程学院图书馆</title>
+  <link rel="icon" href="{{ url_for('static', filename='icon.png') }}" type="image/x-icon" />
+  <link rel="shortcut icon" href="{{ url_for('static', filename='icon.png' )}}" type="image/x-icon" />
+  <!--jquery-->
+  <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+  <!-- Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+  <!--  Bootstrap 核心 JavaScript 文件 -->
+  <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+</head>
+
+<body style="background-image: url({{ url_for('static', filename= 'index.jfif') }});background-size:cover;"
+  id="bodyhead">
+  {% block bodyhead %}{% endblock %}
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav"
+          aria-expanded="false">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+          <b>新疆工程学院图书馆</b>
+        </a>
+      </div>
+
+
+      <div class="collapse navbar-collapse" id="nav">{% block nav %}{% endblock %}
+        <ul class="nav navbar-nav  navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              {{ session.get('username')}}
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="{{ url_for('add_admin') }}">添加管理员</a>
+              </li>
+              <li>
+                <a href="{{ url_for('list_admin') }}">管理员列表</a>
+              </li>
+              <li>
+                <a href="{{ url_for('logout') }}">退出</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        </ul>
+      </div>
+
+    </div>
+
+  </nav>
+  <div class="container-fluid" id="content">{% block content %}{% endblock %}
+
+
+  </div>
+
+</body>
+<footer class="navbar-fixed-bottom text-center" id="footer">
+  <hr>
+  <div class="container">Copyright 2021 马维泽 ALL Rights Reserved </div>
+  <div class="container">马维泽毕业设计&nbsp;&nbsp;&nbsp;2017211184 </div>
+</footer>
+<script>
+  $(function () {
+    $(document).ready(function () {
+      autoFooterHeight();
+    })
+    // 解决底部自动导航的问题
+    function autoFooterHeight() {
+      // 获取内容的高度
+      var bodyHeight = $("body").height();
+      // 获取底部导航的高度
+      var navHeight = $(".navbar").height();
+      // 获取显示屏的高度
+      var iHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      // 如果内容的高度大于（窗口的高度 - 导航的高度）,移除属性样式
+      if (bodyHeight > (iHeight - navHeight)) {
+        $("#footer").removeClass("navbar-fixed-bottom");
+      }
+    }
+  });
+</script>
+
+</html>
+<header>
+  {% block header %}{% endblock %}
+</header>

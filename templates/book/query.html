@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block head %}{% endblock %}
+
+{% block bodyhead %}{% endblock %}
+{% block nav %}
+<ul class="nav navbar-nav">
+  <li>
+    <a href="{{ url_for('index') }}">主页</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_book') }}">图书管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_user') }}">用户管理</a>
+  </li>
+  <li class="active">
+    <a href="{{ url_for('query_book') }}">查询图书</a>
+  </li>
+  <li>
+    <a href="{{ url_for('record') }}">借书记录</a>
+  </li>
+</ul>
+
+{% endblock %}
+{% block content %}
+
+<div style="text-align: center;">
+  <h1 class="text-primary">
+    查找图书
+  </h1>
+</div>
+<div class="container-fluid">
+  <div style="width:300px;" class="center-block">
+    <div class="search-design">
+      <form id="form" class="form-inline" style="margin:20px auto 20px;" method="post">
+        <div class="input-group">
+          <div class="input-group-btn">
+            <select name="select" id="select" class="form-control">
+              <option>书名查询</option>
+              <option>作者查询</option>
+              <option>编号查询</option>
+            </select>
+          </div>
+          <input type="text" class="form-control" id="input" placeholder="输入查找条件" name="key">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary" id="research">查找</button>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div style="margin-top:20px;">
+    {% for book in books %}
+    <article class="post">
+      <hr>
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{ book['title'] }}
+            <a class="btn btn-danger btn-sm pull-right" href="{{ url_for('update_book', id=book['id']) }}">编辑</a>
+            {% if book['borrower'] == -1 %}
+            <a class="btn btn-success btn-sm pull-right" href="{{ url_for('op_book', id=book['id']) }}">借书</a>
+            {% else %}
+            <a class="btn btn-success btn-sm pull-right" href="{{ url_for('op_book', id=book['id']) }}">还书</a>
+            {% endif %}
+          </h3>
+        </div>
+        <div class="panel-body">
+          作者：{{ book['author'] }}&nbsp;|&nbsp;标准书号：{{ book['serial'] }}&nbsp;|&nbsp;添加时间：{{
+          book['create_time'].strftime('%Y-%m-%d %H:%M:%S') }}&nbsp;|&nbsp;状态：{% if book['borrower'] == -1 %}在库{% else
+          %}已借{% endif %}
+          <hr>
+          <p class="body">{{ book['intro'] }}</p>
+        </div>
+      </div>
+    </article>
+    {% if not loop.last %}
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+
+  $(function () {
+
+    //注册回车查找
+    $("#input").keydown(function (event) {
+      if (event.keyCode == 13) {
+        $("#research").click();
+      }
+    });
+
+    $("#research").click(function () {
+      if ($("[name='key']").val().length == 0) {
+        alert("请输入查找条件！");
+        return false;
+      } else
+        $.post({
+          url: "{{ url_for('query_book') }}",
+          data: $("#form").serialize(),
+          success: function (data) {
+            if (data.code == 400) {
+              alert(data.message);
+              location.href = "{{ url_for('query_book') }}";
+            } else {
+              return true;
+            }
+
+          }
+
+
+        });
+    });
+
+
+
+  });
+
+
+</script>
+
+{% endblock %}
+
+{#
+action="{{ url_for('query_book') }}"
+#}
+

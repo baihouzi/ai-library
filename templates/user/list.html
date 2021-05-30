@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block head %}{% endblock %}
+
+{% block bodyhead %}{% endblock %}
+{% block nav %}
+<ul class="nav navbar-nav">
+  <li>
+    <a href="{{ url_for('index') }}">主页</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_book') }}">图书管理</a>
+  </li>
+  <li class="active">
+    <a href="{{ url_for('list_user') }}">用户管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('query_book') }}">查询图书</a>
+  </li>
+  <li>
+    <a href="{{ url_for('record') }}">借书记录</a>
+  </li>
+</ul>
+
+{% endblock %}
+{% block content %}
+
+<article class="post">
+  <div class="container">
+    <a class="btn btn-info pull-right" href="{{ url_for('create_user') }}" style="margin:15px 10px 10px;">添加用户</a>
+    <table class="table table-bordered table-hover text-center ">
+      <thead>
+        <tr class="active">
+          <th class="text-center">学号</th>
+          <th class="text-center">姓名</th>
+          <th class="text-center">学院</th>
+          <th class="text-center">班级</th>
+          <th class="text-center">添加时间</th>
+          <th class="text-center">借书</th>
+          <th class="text-center" style="width:70px;">操作</th>
+        </tr>
+      </thead>
+      <tbody>{% for user in users %}
+        <tr class="success">
+          <td>{{ user['student_num'] }}</td>
+          <td>{{ user['name'] }}</td>
+          <td>{{ user['college'] }}</td>
+          <td>{{ user['class'] }}</td>
+          <td>{{ user['create_time'].strftime('%Y-%m-%d %H:%M:%S') }}</td>
+          <td>{{ user['status'] }}本</td>
+          <td><a href="{{ url_for('delete_user', id=user['id']) }}" class="btn btn-primary btn-xs"
+              onclick="return confirm('确定删除?');">删除</a>
+          </td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</article>
+<div style="text-align: center;">
+  <ul class="pagination">
+    <li><a {% if page==1 %} class="btn disabled" {% endif %} href="{{url_for('list_user', page=page-1)}}">上一页</a></li>
+    {%if page >= 6 %}
+    {%if page <= 3 %} {%for num in range(1,5)%} <li {% if num==page %} class="active" {% endif %}><a
+        href="{{url_for('list_user', page=num)}}">{{num}}</a></li>
+      {%endfor%}
+      <li><a class="btn disabled" href="#">...</a></li>
+      <li {% if num==page %} class="active" {% endif %}><a href="{{url_for('list_user', page=5)}}">5</a></li>
+      {%else%}
+      {%if page+3 <= page_max %} {%for num in range(page-3,page+3)%} <li {% if num==page %} class="active" {% endif %}>
+        <a href="{{url_for('list_user', page=num)}}">{{num}}</a></li>
+        {%endfor%}
+        <li><a class="btn disabled" href="#">...</a></li>
+        <li><a href="{{url_for('list_user', page=page+3)}}">{{page+3}}</a></li>
+        {%else%}
+        {%for num in range(page_max-6,page_max)%}
+        <li {% if num==page %} class="active" {% endif %}><a href="{{url_for('list_user', page=num)}}">{{num}}</a></li>
+        {%endfor%}
+        <li><a class="btn disabled">...</a></li>
+        <li {% if page==page_max %} class="active" {% endif %}><a
+            href="{{url_for('list_user', page=page_max)}}">{{page_max}}</a></li>
+        {% endif %}
+        {% endif %}
+        {%else%}
+        {%for num in range(1,page_max)%}
+        <li {% if num==page %} class="active" {% endif %}><a href="{{url_for('list_user', page=num)}}">{{num}}</a></li>
+        {%endfor%}
+        <li {% if page==page_max %} class="active" {% endif %}><a
+            href="{{url_for('list_user', page=page_max)}}">{{page_max}}</a></li>
+        {%endif%}
+        <li><a {% if page==page_max %} class="btn disabled" {% endif %}
+            href="{{url_for('list_user', page=page+1)}}">下一页</a></li>
+  </ul>
+</div>
+</p>
+{% endblock %}

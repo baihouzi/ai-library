@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %}{% endblock %}
+
+{% block bodyhead %}{% endblock %}
+{% block nav %}
+<ul class="nav navbar-nav">
+  <li>
+    <a href="{{ url_for('index') }}">主页</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_book') }}">图书管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_user') }}">用户管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('query_book') }}">查询图书</a>
+  </li>
+  <li>
+    <a href="{{ url_for('record') }}">借书记录</a>
+  </li>
+</ul>
+
+{% endblock %}
+{% block content %}
+<div style="text-align: center;">
+  <h1>
+    管理员列表
+  </h1>
+  <article class="post">
+    <div class="container">
+      <table class="table table-bordered table-hover text-center ">
+        <thead>
+          <tr class="active">
+            <th class="text-center">学工号</th>
+            <th class="text-center">姓名</th>
+            <th class="text-center">最近登陆时间</th>
+            <th class="text-center" style="width:70px;">操作</th>
+          </tr>
+        </thead>
+        <tbody>{% for admin in admins %}
+          <tr class="success">
+            <td>{{ admin['admin_id'] }}</td>
+            <td>{{ admin['admin_name'] }}</td>
+            <td>{{ admin['last_login_time'] }}</td>
+            <td><a href="{{ url_for('delete_admin', id=admin['admin_id']) }}" class="btn btn-primary btn-xs"
+                onclick="return confirm('确定删除?');">删除</a>
+            </td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </article>
+  {% endblock %}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新疆工程学院图书馆</title>
+    <!--jquery-->
+    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+</head>
+<header>
+
+    <div class="container-fluid">
+        <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename= 'logo.png') }}" width="344"
+                height="86"></a>
+    </div>
+
+</header>
+
+<body style="background-image: url({{ url_for('static', filename= 'index.jfif') }} );background-size:100% 100%;">
+
+
+
+    <div class="container" style="padding:150px 0px">
+        <div class="login"
+            style="width:300px;height:300px;margin:0 auto;padding: 1px 40px;background-color: rgba(255, 255, 255, 0.55);border-radius:20px;display: none;">
+
+            <h2 class="text-center">新疆工程学院<br>图书馆<br /></h2>
+            <form id="form" style="margin-top:20px;" method="post">
+                <div class="form-group">
+                    <div class="input-group" style="width:100%">
+                        <input type="text" class="form-control" name="userId" id="userd" placeholder="请输入学工号">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group" style="width:100%">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="请输入密码">
+                    </div>
+                </div>
+
+                <button type="button" class="form-control btn btn-primary" id="submit">登录</button>
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+
+
+
+
+    $(function () {
+
+
+        $(".login").fadeIn(800);
+
+
+
+        //注册回车登陆事件
+        $("[name='password']").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#submit").click();
+            }
+        });
+        // 登陆
+        $("#submit").click(function () {
+            if ($("[name='userId']").val().length == 0 || $("[name='password']").val().length == 0) {
+                alert("请输入账号或密码！");
+                return false;
+            } else
+                var $val = $("[name='userId']").val();
+                var code;
+            //charAt()获取指定位置字符串,charCodeAt()返回该字符串的编码  
+            //0的ASCII是48,9的ASCII是57  
+                for (var i = 0; i < $val.length; i++) {
+                    var code = $val.charAt(i).charCodeAt(0);
+                    if (code < 48 || code > 57) {
+                        $("[name='userId']").focus();
+                        $("[name='userId']").val("");
+                        alert("请输入正确的学工号!");
+                        break;
+
+                    } else
+                        $.post({
+                            url: "{{ url_for('login') }}",
+                            data: $("#form").serialize(),
+                            success: function (data) {
+                                if (data.code == '200') {
+                                    location.href = "{{ url_for('index') }}";
+                                } else {
+                                    alert(data.message);
+                                    location.href = "{{ url_for('login') }}";
+                                }
+
+                            }
+
+
+                        });
+                        break;
+                
+                    }
+
+        });
+    });
+</script>
+
+</html>

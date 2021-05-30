@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block head %}{% endblock %}
+
+{% block bodyhead %}{% endblock %}
+{% block nav %}
+<ul class="nav navbar-nav">
+  <li>
+    <a href="{{ url_for('index') }}">主页</a>
+  </li>
+  <li class="active">
+    <a href="{{ url_for('list_book') }}">图书管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('list_user') }}">用户管理</a>
+  </li>
+  <li>
+    <a href="{{ url_for('query_book') }}">查询图书</a>
+  </li>
+  <li>
+    <a href="{{ url_for('record') }}">借书记录</a>
+  </li>
+</ul>
+
+{% endblock %}
+{% block content %}
+<div class="h3 text-center">
+    <b>编辑图书</b>
+</div>
+<form id="form" class="form-horizontal text-center" style="width:500px;margin: 20px auto 0;">
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">图书名：</div>
+            <input type="text" class="form-control" name="title" id="title" value="{{ request.form['title'] }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">作者：</div>
+            <input type="text" class="form-control" name="author" id="author" value="{{ request.form['title'] }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">编号：</div>
+            <input type="text" class="form-control" name="serial" id="serial" value="{{ request.form['serial'] }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="text-left" style="width: 100%">作品简介：</label>
+        <textarea class="form-control" style="height: 200px; resize:none;"
+            name="intro">{{ request.form['intro'] }}</textarea>
+    </div>
+    <div class="form-group">
+        <button type="button" id="submit" class="btn btn-primary" style="margin-right: 20px">添&nbsp;加</button>
+        <button type="reset" class="btn btn-warning" style="margin-left: 20px">重&nbsp;置</button>
+    </div>
+</form>
+
+
+
+
+
+<script>
+
+    $(function () {
+
+        $("#submit").click(function () {
+            if ($("[name='title']").val().length == 0 || $("[name='author']").val().length == 0 || $("[name='serial']").val().length == 0 || $("[name='intro']").val().length == 0) {
+                alert("请输入完整信息！");
+                return false;
+            } else
+                $.post({
+                    url: "{{ url_for('create_book') }}",
+                    data: $("#form").serialize(),
+                    success: function (data) {
+                        alert(data.message);
+                        if (data.code == 200) {
+                            location.href = "{{ url_for('list_book') }}";
+                        }
+                    }
+                });
+        });
+
+    })
+
+</script>
+{% endblock %}
